@@ -1,4 +1,4 @@
-name: Auto-merge Exercism app PRs
+name: Auto-merge Exercism app PRs (debug)
 
 on:
   pull_request_target:
@@ -7,12 +7,37 @@ on:
 jobs:
   automerge:
     runs-on: ubuntu-latest
+
     if: >
       github.event.pull_request.user.type == 'Bot' &&
       github.event.pull_request.user.login == 'exercism-solutions-syncer'
 
     steps:
-      - name: Enable auto-merge
+      - name: 🔍 Dump basic event info
+        run: |
+          echo "event_name: ${{ github.event_name }}"
+          echo "actor: ${{ github.actor }}"
+          echo "repository: ${{ github.repository }}"
+
+      - name: 🔍 Dump PR author info
+        run: |
+          echo "PR author login: ${{ github.event.pull_request.user.login }}"
+          echo "PR author type:  ${{ github.event.pull_request.user.type }}"
+
+      - name: 🔍 Dump PR repo info
+        run: |
+          echo "Base repo: ${{ github.event.pull_request.base.repo.full_name }}"
+          echo "Head repo: ${{ github.event.pull_request.head.repo.full_name }}"
+          echo "PR number: ${{ github.event.pull_request.number }}"
+          echo "PR state: ${{ github.event.pull_request.state }}"
+          echo "Draft: ${{ github.event.pull_request.draft }}"
+
+      - name: 🔍 Dump token permissions (best effort)
+        run: |
+          echo "This job is running with GITHUB_TOKEN"
+          echo "If auto-merge fails later, permissions are the culprit"
+
+      - name: 🚀 Enable auto-merge
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

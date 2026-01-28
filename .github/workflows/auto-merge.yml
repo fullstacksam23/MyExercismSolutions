@@ -7,13 +7,10 @@ on:
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    if: >
-      github.event.pull_request.user.type == 'Bot' &&
-      github.event.pull_request.user.login == 'exercism-solutions-syncer'
-
     steps:
-      - name: Enable auto-merge
-        uses: peter-evans/enable-pull-request-automerge@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          merge-method: squash
+      - name: DEBUG — dump context
+        run: |
+          echo "event_name: ${{ github.event_name }}"
+          echo "actor: ${{ github.actor }}"
+          echo "pr login: ${{ github.event.pull_request.user.login }}"
+          echo "pr type: ${{ github.event.pull_request.user.type }}"

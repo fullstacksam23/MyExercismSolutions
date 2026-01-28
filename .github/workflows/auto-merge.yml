@@ -2,15 +2,18 @@ name: Auto-merge Exercism app PRs
 
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    types: [opened]
 
 jobs:
   automerge:
     runs-on: ubuntu-latest
+    if: >
+      github.event.pull_request.user.type == 'Bot' &&
+      github.event.pull_request.user.login == 'exercism-solutions-syncer[bot]'
+
     steps:
-      - name: DEBUG — dump context
-        run: |
-          echo "event_name: ${{ github.event_name }}"
-          echo "actor: ${{ github.actor }}"
-          echo "pr login: ${{ github.event.pull_request.user.login }}"
-          echo "pr type: ${{ github.event.pull_request.user.type }}"
+      - name: Enable auto-merge
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          merge-method: squash

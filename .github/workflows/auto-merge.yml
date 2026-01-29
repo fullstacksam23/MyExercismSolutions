@@ -23,4 +23,4 @@ jobs:
             --repo "${{ github.repository }}" \
             --squash \
             --auto \
-            --author "Sam <YOUR_NOREPLY_EMAIL@users.noreply.github.com>"
+            --author "Samuel <94606164+fullstacksam23@users.noreply.github.com>"

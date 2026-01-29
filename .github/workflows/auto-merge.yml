@@ -12,9 +12,15 @@ jobs:
       github.event.pull_request.user.login == 'exercism-solutions-syncer[bot]'
 
     steps:
-      - name: Enable auto-merge
-        uses: peter-evans/enable-pull-request-automerge@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          pull-request-number: ${{ github.event.pull_request.number }}
-          merge-method: squash
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Auto squash-merge as repo owner
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
+            --squash \
+            --auto \
+            --author "Sam <YOUR_NOREPLY_EMAIL@users.noreply.github.com>"
